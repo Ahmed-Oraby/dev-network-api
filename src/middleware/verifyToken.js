@@ -5,15 +5,15 @@ module.exports = (req, res, next) => {
 
 	const token = req.header('x-auth-token');
 	if (!token) {
-		return res.status(401).send('Token is required.');
+		return res.status(401).send({ message: 'Token is required.' });
 	}
 
 	try {
 		const decoded = jwt.verify(token, secret);
 		req.body.user = decoded.user;
-		console.log(decoded, req);
+
 		next();
 	} catch (err) {
-		res.status(401).send('Not authorized.');
+		res.status(401).send({ message: 'Not authorized.' });
 	}
 };
