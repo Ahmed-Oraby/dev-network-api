@@ -3,7 +3,9 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const gravatar = require('gravatar');
 const User = require('../models/User');
+const Profile = require('../models/Profile');
 const { validateLogin, validateRegister } = require('../middleware/validateUser');
+const verifyToken = require('../middleware/verifyToken');
 
 const router = express.Router();
 
@@ -23,7 +25,7 @@ router.post('/register', validateRegister, async (req, res) => {
 
 		//hash the password
 		const salt = await bcrypt.genSalt(10);
-		password = await bcrypt.hash(password, salt);
+		const hashedPassword = await bcrypt.hash(password, salt);
 
 		//generate avatar
 		const avatar = gravatar.url(email, {
@@ -37,7 +39,7 @@ router.post('/register', validateRegister, async (req, res) => {
 		let user = new User({
 			name,
 			email,
-			password,
+			password: hashedPassword,
 			avatar,
 		});
 		user = await user.save();
@@ -51,7 +53,7 @@ router.post('/register', validateRegister, async (req, res) => {
 		const secret = process.env.JWT_SECRET;
 		const token = jwt.sign(payload, secret, { expiresIn: '2h' });
 
-		res.send(token);
+		res.send({ token });
 	} catch (err) {
 		console.log(err);
 		res.status(500).send({ message: 'Server error.' });
@@ -85,7 +87,23 @@ router.post('/login', validateLogin, async (req, res) => {
 		const secret = process.env.JWT_SECRET;
 		const token = jwt.sign(payload, secret, { expiresIn: '2h' });
 
-		res.send(token);
+		res.send({ token });
+	} catch (err) {
+		console.log(err);
+		res.status(500).send({ message: 'Server error.' });
+	}
+});
+
+//delete own user, profile and posts
+router.delete('/', verifyToken, async (req, res) => {
+	try {
+		const user = req.body.user.id;
+
+		//TODO: delete user posts
+		await Profile.findOneAndRemove({ user });
+		await User.findOneAndRemove({ _id: user });
+
+		res.send({ message: 'User was deleted successfully.' });
 	} catch (err) {
 		console.log(err);
 		res.status(500).send({ message: 'Server error.' });
