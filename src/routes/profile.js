@@ -1,4 +1,5 @@
 const express = require('express');
+const fetch = require('node-fetch').default;
 const verifyToken = require('../middleware/verifyToken');
 const Profile = require('../models/Profile');
 const {
@@ -170,6 +171,25 @@ router.delete('/experience/:id', [verifyToken, validateId], async (req, res) => 
 		await profile.save();
 		await profile.populate('user', 'name avatar');
 		res.send(profile);
+	} catch (err) {
+		console.log(err);
+		res.status(500).send({ message: 'Server error' });
+	}
+});
+
+//get github repos
+router.get('/github/:username', async (req, res) => {
+	try {
+		const response = await fetch(
+			`https://api.github.com/users/${req.params.username}/repos?per_page=5&sort=created&direction=asc`
+		);
+		const data = await response.json();
+
+		if (response.status !== 200) {
+			return res.status(response.status).send({ message: data.message });
+		}
+
+		res.send(data);
 	} catch (err) {
 		console.log(err);
 		res.status(500).send({ message: 'Server error' });
