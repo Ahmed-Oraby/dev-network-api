@@ -67,15 +67,15 @@ module.exports.validateExperience = (req, res, next) => {
 	next();
 };
 
-module.exports.validateId = (req, res, next) => {
-	const schema = Joi.object({
-		id: Joi.objectId(),
-	});
+// module.exports.validateId = (req, res, next) => {
+// 	const schema = Joi.object({
+// 		id: Joi.objectId(),
+// 	});
 
-	const validation = schema.validate(req.params);
-	if (validation.error) {
-		return res.status(400).send({ message: validation.error.details[0].message });
-	}
+// 	const validation = schema.validate(req.params);
+// 	if (validation.error) {
+// 		return res.status(400).send({ message: validation.error.details[0].message });
+// 	}
 
-	next();
-};
+// 	next();
+// };

@@ -1,11 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const Joi = require('joi');
-Joi.objectId = require('joi-objectid')(Joi);
+
 const userRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
 const profileRouter = require('./routes/profile');
+const postRouter = require('./routes/posts');
 
 dotenv.config();
 
@@ -26,6 +26,7 @@ app.use(express.json());
 app.use('/api/users', userRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/profile', profileRouter);
+app.use('/api/posts', postRouter);
 
 app.get('/', (req, res) => {
 	res.send('hello world');

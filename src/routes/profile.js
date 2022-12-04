@@ -6,8 +6,8 @@ const {
 	validateProfile,
 	validateEducation,
 	validateExperience,
-	validateId,
 } = require('../middleware/validateProfile');
+const validateId = require('../../libs/validateId');
 
 const router = express.Router();
 
@@ -70,12 +70,15 @@ router.get('/', async (req, res) => {
 });
 
 //get user profile by id
-router.get('/user/:id', validateId, async (req, res) => {
+router.get('/user/:user_id', async (req, res) => {
 	try {
-		const profile = await Profile.findOne({ user: req.params.id }).populate(
-			'user',
-			'name avatar'
-		);
+		const userId = req.params.user_id;
+
+		if (!validateId(userId)) {
+			return res.status(404).send({ message: 'User was not found.' });
+		}
+
+		const profile = await Profile.findOne({ user: userId }).populate('user', 'name avatar');
 		if (!profile) {
 			return res.status(400).send({ message: 'Profile was not found' });
 		}
@@ -112,11 +115,17 @@ router.put('/education', [verifyToken, validateEducation], async (req, res) => {
 });
 
 //delete education by id
-router.delete('/education/:id', [verifyToken, validateId], async (req, res) => {
+router.delete('/education/:edu_id', verifyToken, async (req, res) => {
 	try {
+		const eduId = req.params.edu_id;
+
+		if (!validateId(eduId)) {
+			return res.status(404).send({ message: 'Education was not found.' });
+		}
+
 		const profile = await Profile.findOne({ user: req.body.user.id });
 
-		const eduObject = profile.education.find((item) => item._id.toString() === req.params.id);
+		const eduObject = profile.education.find((item) => item._id.toString() === eduId);
 		if (!eduObject) {
 			return res.status(400).send('Education was not found.');
 		}
@@ -157,11 +166,17 @@ router.put('/experience', [verifyToken, validateExperience], async (req, res) =>
 });
 
 //delete experience by id
-router.delete('/experience/:id', [verifyToken, validateId], async (req, res) => {
+router.delete('/experience/:exp_id', verifyToken, async (req, res) => {
 	try {
+		const expId = req.params.exp_id;
+
+		if (!validateId(expId)) {
+			return res.status(404).send({ message: 'Experience was not found.' });
+		}
+
 		const profile = await Profile.findOne({ user: req.body.user.id });
 
-		const expObject = profile.experience.find((item) => item._id.toString() === req.params.id);
+		const expObject = profile.experience.find((item) => item._id.toString() === expId);
 		if (!expObject) {
 			return res.status(400).send('Experience was not found.');
 		}
