@@ -1,16 +1,17 @@
 {
-  "name": "dev-network",
+  "name": "dev-network-api",
   "version": "1.0.0",
   "description": "A developers network application",
   "main": "index.js",
   "scripts": {
     "start": "nodemon src/index",
-    "test": "jest"
+    "test": "jest --detectOpenHandles --verbose"
   },
   "author": "Ahmed Oraby",
   "license": "MIT",
   "dependencies": {
     "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "gravatar": "^1.8.2",
@@ -22,6 +23,7 @@
   },
   "devDependencies": {
     "@types/jest": "^29.2.3",
-    "jest": "^29.3.1"
+    "jest": "^29.3.1",
+    "supertest": "^6.3.2"
   }
 }

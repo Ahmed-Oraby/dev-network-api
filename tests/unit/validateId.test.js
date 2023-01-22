@@ -1,4 +1,4 @@
-const validateId = require('../libs/validateId');
+const validateId = require('../../libs/validateId');
 
 describe('ObjectId validation', () => {
 	it('should return true if id is valid objectId', () => {
