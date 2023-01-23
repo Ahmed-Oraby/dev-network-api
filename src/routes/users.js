@@ -35,7 +35,7 @@ router.post('/register', validateRegister, async (req, res) => {
       s: '200',
       r: 'g',
       d: 'mp',
-      protocol: 'http',
+      protocol: 'https',
     });
 
     //create new user and save to the database
