@@ -4,7 +4,8 @@
   "description": "A developers network application",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon src/index",
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js",
     "test": "jest --detectOpenHandles --verbose"
   },
   "author": "Ahmed Oraby",
