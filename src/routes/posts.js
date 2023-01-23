@@ -10,8 +10,8 @@ const router = express.Router();
 //get all posts as pages
 router.get('/', verifyToken, async (req, res) => {
   try {
-    const pageNumber = req.query.page_number || 1;
-    const pageSize = req.query.page_size || 10;
+    const pageNumber = Number(req.query.page_number) || 1;
+    const pageSize = Number(req.query.page_size) || 10;
     const posts = await Post.find()
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize)
