@@ -29,8 +29,8 @@ app.use('/api/auth', authRouter);
 app.use('/api/profile', profileRouter);
 app.use('/api/posts', postRouter);
 
-app.get('/', (_req, res) => {
-  res.send('hello world');
+app.get('/api', (_req, res) => {
+  res.send({ message: 'hello world' });
 });
 
 function runServer() {
