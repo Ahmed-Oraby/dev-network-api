@@ -2,6 +2,7 @@ const express = require('express');
 const fetch = require('node-fetch').default;
 const verifyToken = require('../middleware/verifyToken');
 const Profile = require('../models/Profile');
+const User = require('../models/User');
 const {
   validateProfile,
   validateEducation,
@@ -89,11 +90,13 @@ router.get('/user/:user_id', async (req, res) => {
       'user',
       'name avatar'
     );
-    if (!profile) {
+    const user = await User.findById(userId).select(['name', 'avatar']);
+
+    if (!profile && !user) {
       return res.status(400).send({ message: 'Profile was not found' });
     }
 
-    res.send(profile);
+    res.send({ profile, user });
   } catch (err) {
     console.log(err);
     res.status(500).send({ message: 'Server error' });
